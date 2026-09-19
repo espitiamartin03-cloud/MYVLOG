@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>blog</title>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html, body {
+    width: 100%;
+    min-height: 100%;
+    background: #000;
+    color: #eee;
+    font-family: monospace;
+  }
+
+  header {
+    padding: 40px 20px 20px;
+    text-align: center;
+  }
+
+  header h1 {
+    font-family: "Comic Sans MS", "Comic Sans", cursive;
+    color: #ff3fa4;
+    font-size: 32px;
+  }
+
+  main {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  .entry {
+    border-bottom: 1px solid #333;
+    padding: 20px 0;
+  }
+
+  .entry:last-child {
+    border-bottom: none;
+  }
+
+  .entry .date {
+    color: #666;
+    font-size: 12px;
+    margin-bottom: 6px;
+  }
+
+  .entry h2 {
+    font-size: 16px;
+    margin-bottom: 8px;
+    color: #ff3fa4;
+  }
+
+  .entry p {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #ccc;
+  }
+</style>
+</head>
+<body>
+
+  <header>
+    <h1>Dreaming</h1>
+  </header>
+
+  <main>
+    <!-- Duplica este bloque .entry para cada entrada nueva -->
+    <div class="entry">
+      <div class="date">18/09</div>
+      <h2>entrada 1</h2>
+      <p>Escribe aquí el texto de tu primera entrada.</p>
+    </div>
+
+    <div class="entry">
+      <div class="date">--/--</div>
+      <h2>entrada 2</h2>
+      <p>Escribe aquí el texto de tu segunda entrada.</p>
+    </div>
+  </main>
+
+</body>
+</html>
