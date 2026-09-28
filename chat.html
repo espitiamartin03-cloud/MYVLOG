@@ -106,10 +106,21 @@
   #chat-form button:hover {
     background: #ff6fbb;
   }
+   #static {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.08;
+    image-rendering: pixelated;
+  }
 </style>
 </head>
 <body>
-
+<canvas id="static"></canvas>
   <div class="chat">
     <h1>Base de Datos Interactiva de la asosiación de Jujutsu</h1>
     <div id="messages"></div>
@@ -247,6 +258,27 @@
 
     if (FIRST_MESSAGE) addMessage(FIRST_MESSAGE, 'bot');
   </script>
+<script>
+  (function () {
+    var c = document.getElementById('static');
+    var ctx = c.getContext('2d');
+    c.width = 200;
+    c.height = 200;
+    var img = ctx.createImageData(200, 200);
 
+    function draw() {
+      var d = img.data;
+      for (var i = 0; i < d.length; i += 4) {
+        var v = Math.random() * 255;
+        d[i] = d[i + 1] = d[i + 2] = v;
+        d[i + 3] = 255;
+      }
+      ctx.putImageData(img, 0, 0);
+    }
+
+    draw();
+    setInterval(draw, 70);
+  })();
+</script>
 </body>
 </html>
