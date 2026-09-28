@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>chat</title>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html, body {
+    width: 100%;
+    height: 100%;
+    background: #000;
+    color: #eee;
+    font-family: monospace;
+  }
+
+  .chat {
+    max-width: 600px;
+    height: 100%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+  }
+
+  .chat h1 {
+    font-family: "Comic Sans MS", "Comic Sans", cursive;
+    color: #ff3fa4;
+    font-size: 24px;
+    text-align: center;
+    margin-bottom: 15px;
+  }
+
+  #messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 10px 0;
+  }
+
+  .msg {
+    margin-bottom: 12px;
+    font-size: 14px;
+    line-height: 1.5;
+    max-width: 85%;
+    word-wrap: break-word;
+  }
+
+  .msg.user {
+    margin-left: auto;
+    text-align: right;
+    color: #aaa;
+  }
+
+  .msg.bot {
+    color: #ff3fa4;
+  }
+
+  .msg.typing {
+    color: #666;
+  }
+
+  .msg img {
+    display: block;
+    max-width: 100%;
+    margin-top: 6px;
+  }
+
+  #chat-form {
+    display: flex;
+    gap: 8px;
+    padding-top: 10px;
+    border-top: 1px solid #333;
+  }
+
+  #chat-input {
+    flex: 1;
+    padding: 10px;
+    background: #000;
+    border: 1px solid #444;
+    color: #eee;
+    font-family: monospace;
+    font-size: 14px;
+  }
+
+  #chat-input:focus {
+    outline: none;
+    border-color: #ff3fa4;
+  }
+
+  #chat-form button {
+    padding: 10px 16px;
+    background: #ff3fa4;
+    border: none;
+    color: #000;
+    font-family: monospace;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+  #chat-form button:hover {
+    background: #ff6fbb;
+  }
+</style>
+</head>
+<body>
+
+  <div class="chat">
+    <h1>Dreaming</h1>
+    <div id="messages"></div>
+    <form id="chat-form">
+      <input type="text" id="chat-input" placeholder="escribe algo..." autocomplete="off">
+      <button type="submit">&gt;</button>
+    </form>
+  </div>
+
+  <script>
+    // =====================================================
+    //  EDITA AQUÍ: palabras clave y respuestas
+    //  - "keywords": si el mensaje contiene CUALQUIERA de estas palabras, responde.
+    //  - "replies": respuestas posibles (elige una al azar). Puedes poner solo una.
+    //  - Se ignoran mayúsculas y acentos ("Sueño" = "sueno").
+    //  - Se revisan en orden: la primera que coincida gana.
+    // =====================================================
+    const RULES = [
+      {
+        keywords: ["hola", "hey", "buenas"],
+        replies: ["hola.", "¿me escuchas?"]
+      },
+      {
+        keywords: ["quien eres", "quien eres tu", "nombre"],
+        replies: ["no lo recuerdo."]
+      },
+      {
+        keywords: ["sueno", "dormir", "dreaming"],
+        replies: ["todavía estás dormido.", "despierta."]
+      },
+      {
+        keywords: ["ojo", "eye"],
+        replies: [{ text: "te está mirando.", image: "eye.png" }]
+      }
+    ];
+
+    // Respuesta si no coincide ninguna palabra clave
+    const DEFAULT_REPLIES = [
+      "no entiendo.",
+      "...",
+      "repite eso."
+    ];
+
+    // Mensaje inicial (déjalo vacío "" si no quieres ninguno)
+    const FIRST_MESSAGE = "...hay alguien ahí?";
+
+    // Milisegundos que "tarda en escribir" antes de responder
+    const REPLY_DELAY = 900;
+    // =====================================================
+
+    const messages = document.getElementById('messages');
+    const form = document.getElementById('chat-form');
+    const input = document.getElementById('chat-input');
+
+    function normalize(text) {
+      return text
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .trim();
+    }
+
+    function addMessage(content, who) {
+      const div = document.createElement('div');
+      div.className = 'msg ' + who;
+
+      if (typeof content === 'object') {
+        if (content.text) {
+          const t = document.createElement('div');
+          t.textContent = content.text;
+          div.appendChild(t);
+        }
+        if (content.image) {
+          const img = document.createElement('img');
+          img.src = content.image;
+          img.alt = '';
+          img.onload = () => { messages.scrollTop = messages.scrollHeight; };
+          div.appendChild(img);
+        }
+      } else {
+        div.textContent = content;
+      }
+
+      messages.appendChild(div);
+      messages.scrollTop = messages.scrollHeight;
+      return div;
+    }
+
+    function pick(list) {
+      return list[Math.floor(Math.random() * list.length)];
+    }
+
+    function getReply(userText) {
+      const clean = normalize(userText);
+      for (const rule of RULES) {
+        for (const kw of rule.keywords) {
+          if (clean.includes(normalize(kw))) {
+            return pick(rule.replies);
+          }
+        }
+      }
+      return pick(DEFAULT_REPLIES);
+    }
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const text = input.value.trim();
+      if (!text) return;
+
+      addMessage(text, 'user');
+      input.value = '';
+
+      const typing = addMessage('...', 'bot typing');
+      setTimeout(() => {
+        typing.remove();
+        addMessage(getReply(text), 'bot');
+      }, REPLY_DELAY);
+    });
+
+    if (FIRST_MESSAGE) addMessage(FIRST_MESSAGE, 'bot');
+  </script>
+
+</body>
+</html>
