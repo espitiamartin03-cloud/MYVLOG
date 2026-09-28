@@ -110,7 +110,7 @@
 <body>
 
   <div class="chat">
-    <h1>Dreaming</h1>
+    <h1>Base de Datos Interactiva de la asosiación de Jujutsu</h1>
     <div id="messages"></div>
     <form id="chat-form">
       <input type="text" id="chat-input" placeholder="escribe algo..." autocomplete="off">
@@ -129,15 +129,15 @@
     const RULES = [
       {
         keywords: ["hola", "hey", "buenas"],
-        replies: ["hola.", "¿me escuchas?"]
+        replies: ["hola.", "bienvenido a la base de datos interactiva]
       },
       {
         keywords: ["quien eres", "quien eres tu", "nombre"],
-        replies: ["no lo recuerdo."]
+        replies: ["no deberias hacer preguntas de las que no quieres la respuesta"]
       },
       {
         keywords: ["sueno", "dormir", "dreaming"],
-        replies: ["todavía estás dormido.", "despierta."]
+        replies: ["ella se quedo durmiendo, aun no lo saben", "abran los ojos"]
       },
       {
         keywords: ["ojo", "eye"],
@@ -153,7 +153,7 @@
     ];
 
     // Mensaje inicial (déjalo vacío "" si no quieres ninguno)
-    const FIRST_MESSAGE = "...hay alguien ahí?";
+    const FIRST_MESSAGE = "Bienvenido a la base de datos interactiva, escribe el nombre de aquello que quieras saber";
 
     // Milisegundos que "tarda en escribir" antes de responder
     const REPLY_DELAY = 900;
